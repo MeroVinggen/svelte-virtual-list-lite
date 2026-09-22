@@ -1,15 +1,36 @@
 <script>
-  import VirtualList from "./lib/VirtualList.svelte";
-  const items = Array.from({ length: 10000 }, (_, i) => ({
-    id: i,
-    name: `Item ${i}`,
-  }));
+  import DemoDynamic from "./demo/DemoDynamic.svelte";
+  import DemoStatic from "./demo/DemoStatic.svelte";
+
+  let demo = $state("static");
 </script>
 
-<div style="height:100vh">
-  <VirtualList {items} itemHeight={32}>
-    {#snippet renderItem(item)}
-      <div style="padding:8px; border-bottom:1px solid #ddd">{item.name}</div>
-    {/snippet}
-  </VirtualList>
-</div>
+<nav>
+  <button
+    class="btn"
+    onclick={() => {
+      demo = "static";
+    }}>Static (10k)</button
+  >
+  <button
+    class="btn"
+    onclick={() => {
+      demo = "dynamic";
+    }}>Dynamic (push)</button
+  >
+</nav>
+
+{#if demo === "static"}
+  <DemoStatic />
+{:else}
+  <DemoDynamic />
+{/if}
+
+<style>
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+  }
+</style>

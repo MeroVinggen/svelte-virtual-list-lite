@@ -1,5 +1,5 @@
 <script lang="ts" generics="T">
-  import type { Snippet } from "svelte";
+  import { untrack, type Snippet } from "svelte";
 
   type Mode = "row" | "grid";
 
@@ -23,6 +23,7 @@
     outerRef = $bindable<HTMLDivElement | undefined>(undefined),
     spacerRef = $bindable<HTMLDivElement | undefined>(undefined),
     contentRef = $bindable<HTMLDivElement | undefined>(undefined),
+    onRender,
   }: {
     items?: T[];
     renderItem: Snippet<[T, number]>;
@@ -43,6 +44,7 @@
     outerRef?: HTMLDivElement;
     spacerRef?: HTMLDivElement;
     contentRef?: HTMLDivElement;
+    onRender?: () => void;
   } = $props();
 
   // internal copy
@@ -56,6 +58,8 @@
   // items prop replaced (new array ref, e.g. a store value) -> resync + reset scroll to top
   $effect(() => {
     list = items ?? [];
+    version = untrack(() => version + 1);
+
     if (resetScrollOnItemsChange) {
       scrollToTop();
     }
@@ -100,7 +104,32 @@
       ? Math.max(1, Math.floor((clientWidth + gapX) / colPitch))
       : 1,
   );
-  const rowCount = $derived(Math.ceil(list.length / itemsPerRow));
+
+  let pendingResolvers: Array<() => void> = [];
+
+  let version = $state(0);
+
+  // manual re-render trigger
+  export const triggerUpdate = () => {
+    version += 1;
+  };
+
+  // fires only on data changes (prop swap or manual trigger), never on scroll/resize
+  $effect(() => {
+    version;
+    onRender?.();
+    const resolvers = pendingResolvers;
+    pendingResolvers = [];
+    resolvers.forEach((res) => res());
+  });
+
+  // await this to run code right after the next render
+  export const rendered = (): Promise<void> =>
+    new Promise((resolve) => pendingResolvers.push(resolve));
+
+  // trick the svelte to update the rowCount and trigger re-render if version changed
+  const rowCount = $derived(Math.ceil(list.length / itemsPerRow) + version * 0);
+
   // no trailing gap after the last row
   const totalHeight = $derived(rowCount > 0 ? rowCount * rowPitch - gapY : 0);
 
@@ -131,7 +160,8 @@
 
   export const scrollToIndex = (index: number) => {
     const row = Math.floor(index / itemsPerRow);
-    const top = row * rowPitch;
+    const maxScroll = Math.max(0, totalHeight - clientHeight);
+    const top = Math.min(row * rowPitch, maxScroll);
     scrollTop = top;
     if (outerRef) {
       outerRef.scrollTop = top;
