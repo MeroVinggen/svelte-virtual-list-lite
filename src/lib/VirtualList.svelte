@@ -11,6 +11,10 @@
     itemWidth = 0,
     gapX = 0,
     gapY = 0,
+    padTop = 0,
+    padRight = 0,
+    padBottom = 0,
+    padLeft = 0,
     resetScrollOnItemsChange = true,
     overscan = 3,
     outerClass = "",
@@ -27,6 +31,10 @@
     itemWidth?: number;
     gapX?: number;
     gapY?: number;
+    padTop?: number;
+    padRight?: number;
+    padBottom?: number;
+    padLeft?: number;
     resetScrollOnItemsChange?: boolean;
     overscan?: number;
     outerClass?: string;
@@ -135,7 +143,7 @@
   class={outerClass}
   bind:this={outerRef}
   onscroll={onScroll}
-  style="overflow-y:auto; height:100%; position:relative; scrollbar-gutter: stable;"
+  style="overflow-y:auto; height:100%; position:relative; scrollbar-gutter: stable; padding:{padTop}px {padRight}px {padBottom}px {padLeft}px;"
 >
   <div
     class={spacerClass}
