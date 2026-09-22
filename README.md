@@ -12,6 +12,7 @@ A tiny, single-file Svelte 5 virtual list. Fixed item sizes, zero deps, no per-i
 - ♻️ DOM node recycling (stable slot keying) - no per-scroll create/destroy
 - 🪝 Bindable refs + classes for outer/spacer/content wraps
 - 📦 Plain object items in, plain object items out (no proxy wrapping)
+- 🔔 Manual `triggerUpdate()`, `onRender` callback, and awaitable `rendered()` for external-mutation control
 
 ## Usage
 
