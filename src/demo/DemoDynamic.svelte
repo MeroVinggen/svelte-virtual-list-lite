@@ -23,7 +23,7 @@
 <section class="outer">
   <button class="btn" onclick={() => addItem(lastItem++)}>Add</button>
 
-  <section class="inner">
+  <section class="list-render-wrap">
     <VirtualList bind:this={vl} {items} itemHeight={40}>
       {#snippet renderItem(item, index)}
         <div class="item">{item}</div>
@@ -35,32 +35,24 @@
 <style>
   .info {
     padding: 8px 12px;
-    margin-bottom: 8px;
-    background: #f0f4ff;
-    border: 1px solid #c3d0f5;
+    margin: 20px 0;
+    background-color: var(--info-bg);
+    border: 1px solid var(--info-border);
     border-radius: 6px;
-    font-size: 0.85rem;
+    font-size: 1.25rem;
   }
   .info code {
-    background: #e2e8f7;
+    background-color: #2d3d6c;
     padding: 1px 4px;
     border-radius: 3px;
+    font-style: italic;
   }
   .outer {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
-  .inner {
-    height: 50vh;
-    border: solid 2px;
-  }
   button {
     align-self: center;
-  }
-  .item {
-    height: 40px;
-    box-sizing: border-box;
-    border-bottom: 1px solid #ddd;
   }
 </style>

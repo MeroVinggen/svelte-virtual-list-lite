@@ -7,23 +7,10 @@
   }));
 </script>
 
-<section>
-  <VirtualList {items} itemHeight={32}>
+<section class="list-render-wrap">
+  <VirtualList {items} itemHeight={40}>
     {#snippet renderItem(item)}
       <div class="item">{item.name}</div>
     {/snippet}
   </VirtualList>
 </section>
-
-<style>
-  section {
-    height: 50vh;
-    border: solid 2px;
-  }
-  .item {
-    height: 32px;
-    padding: 8px;
-    box-sizing: border-box;
-    border-bottom: 1px solid #ddd;
-  }
-</style>

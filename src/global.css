@@ -1,10 +1,38 @@
+:root {
+  color-scheme: light dark;
+  --bg: azure;
+  --fg: #111;
+  --border: #ddd;
+  --info-bg: #f0f4ff;
+  --info-border: #c3d0f5;
+  --code-bg: #e2e8f7;
+  --btn-bg: black;
+  --btn-fg: ghostwhite;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1720;
+    --fg: #e6e6e6;
+    --border-color: #3a587a;
+    --info-bg: #1b2540;
+    --info-border: #34457a;
+    --code-bg: #26335a;
+    --btn-bg: ghostwhite;
+    --btn-fg: black;
+    --list-bg: #2b425b5e;
+  }
+}
+
 html,
 body {
   height: 100%;
   margin: 0;
-  background-color: azure;
+  background-color: var(--bg);
+  color: var(--fg);
   padding: 10px;
   box-sizing: border-box;
+  font-size: 20px;
 }
 
 .btn {
@@ -12,22 +40,35 @@ body {
   padding: 5px 10px;
   cursor: pointer;
   border: none;
-  color: ghostwhite;
-  background-color: black;
+  color: var(--btn-fg);
+  background-color: var(--btn-bg);
   transition: 250ms;
   -webkit-tap-highlight-color: transparent;
+  font-size: 0.8rem;
 }
 
-.btn:hover {
-  scale: 1.1;
+.list-render-wrap {
+  height: 50vh;
+  border-radius: 10px;
+  padding-left: 10px;
+  width: clamp(200px, 50%, 500px);
+  margin: 20px auto;
+  background-color: var(--list-bg);
 }
 
-.btn:active {
-  scale: 0.9;
+.item {
+  height: 40px;
+  padding: 8px;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--border-color);
 }
 
 @media (hover: hover) {
   .btn:hover {
     scale: 1.1;
   }
+}
+
+.btn:active {
+  scale: 0.9;
 }
