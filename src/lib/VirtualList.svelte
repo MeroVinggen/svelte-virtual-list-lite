@@ -16,6 +16,7 @@
     padBottom = 0,
     padLeft = 0,
     resetScrollOnItemsChange = true,
+    alwaysRerender = true,
     overscan = 3,
     outerClass = "",
     spacerClass = "",
@@ -37,6 +38,7 @@
     padBottom?: number;
     padLeft?: number;
     resetScrollOnItemsChange?: boolean;
+    alwaysRerender?: boolean;
     overscan?: number;
     outerClass?: string;
     spacerClass?: string;
@@ -54,15 +56,16 @@
   let clientHeight = $state(0);
   let clientWidth = $state(0);
   let rafPending = false;
+  let scrollResetOverride: boolean | undefined = undefined; // undefined = use prop
 
   // items prop replaced (new array ref, e.g. a store value) -> resync + reset scroll to top
   $effect(() => {
     list = items ?? [];
-    version = untrack(() => version + 1);
 
-    if (resetScrollOnItemsChange) {
-      scrollToTop();
-    }
+    untrack(() => {
+      if (alwaysRerender) version += 1;
+      if (scrollResetOverride ?? resetScrollOnItemsChange) scrollToTop();
+    });
   });
 
   // only the outer wrap is measured - no per-item ResizeObserver
@@ -114,6 +117,13 @@
     version += 1;
   };
 
+  export const overrideResetScroll = (v: boolean) => {
+    scrollResetOverride = v;
+  };
+  export const restoreResetScroll = () => {
+    scrollResetOverride = undefined;
+  };
+
   // fires only on data changes (prop swap or manual trigger), never on scroll/resize
   $effect(() => {
     version;
@@ -127,7 +137,9 @@
   export const rendered = (): Promise<void> =>
     new Promise((resolve) => pendingResolvers.push(resolve));
 
-  // trick the svelte to update the rowCount and trigger re-render if version changed
+  // `list` is $state.raw, so an in-place mutation of the same array doesn't invalidate it.
+  // Reading `version` here makes rowCount (and totalHeight/endIndex downstream) recompute
+  // on triggerUpdate/alwaysRerender, so the new length is picked up.
   const rowCount = $derived(Math.ceil(list.length / itemsPerRow) + version * 0);
 
   // no trailing gap after the last row
@@ -143,11 +155,12 @@
   const endIndex = $derived(Math.min(list.length, endRow * itemsPerRow));
   const offsetY = $derived(startRow * rowPitch);
 
-  const visible = $derived(
-    list
+  const visible = $derived.by(() => {
+    version; // re-run on triggerUpdate
+    return list
       .slice(startIndex, endIndex)
-      .map((item, i) => ({ item, index: startIndex + i })),
-  );
+      .map((item, i) => ({ item, index: startIndex + i }));
+  });
 
   const capacity = $derived(visibleRows * itemsPerRow);
 
