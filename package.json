@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --open",
+    "dev:net": "vite --open --host",
     "build": "vite build"
   },
   "devDependencies": {
