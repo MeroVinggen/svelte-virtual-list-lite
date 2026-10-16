@@ -25,8 +25,8 @@
     {
       id: "huge",
       nav: "250k items & scroll to",
-      title: "A lot of items & scroll to",
-      lead: "250 000 rows, same cost. Rows are recycled by key (<code>index % capacity</code>), so the DOM row count stays flat while you scroll or jump with <code>scrollToIndex()</code>.",
+      title: "A lot of items, scroll to & render await",
+      lead: "250 000 rows, same cost. Rows are recycled by key (<code>index % capacity</code>), so the DOM row count stays flat. <code>scrollToIndex()</code> alone doesn't fire <code>rendered()</code> (scrolling isn't a data change), so call <code>triggerUpdate()</code> after it, then <code>await rendered()</code> to run code once the target row is in the DOM - here, to spawn a wave on it. Out-of-range input is clamped to the first/last item.",
       file: "DemoHuge.svelte",
       src: hugeSrc,
       Demo: DemoHuge,
@@ -89,7 +89,11 @@
 
   const methods = [
     ["triggerUpdate()", "void", "Re-render after in-place mutation."],
-    ["rendered()", "Promise<void>", "Resolves after the next render."],
+    [
+      "rendered()",
+      "Promise<void>",
+      "Resolves after the next data-driven render (triggerUpdate() or items change). Not fired by plain scroll.",
+    ],
     [
       "scrollToIndex(i)",
       "void",

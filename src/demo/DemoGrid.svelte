@@ -8,12 +8,12 @@
   <span class="chip">drag the bottom-right corner to resize</span>
 </div>
 
-<div class="viewport resizable" style="height: 440px;">
+<div class="viewport grid resizable" style="height: 440px;">
   <VirtualList
     {items}
     mode="grid"
-    itemWidth={72}
-    itemHeight={72}
+    itemWidth={66}
+    itemHeight={66}
     gapX={8}
     gapY={8}
     padTop={8}
