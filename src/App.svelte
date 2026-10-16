@@ -35,7 +35,7 @@
       id: "grid",
       nav: "Grid",
       title: "Grid mode",
-      lead: '<code>mode="grid"</code> packs as many columns as fit. Resize the box - columns reflow via the container <code>ResizeObserver</code>.',
+      lead: '<code>mode="grid"</code> packs as many columns as fit. Resize the box (drag the grip in the bottom-right corner) - columns reflow via the container <code>ResizeObserver</code>.',
       file: "DemoGrid.svelte",
       src: gridSrc,
       Demo: DemoGrid,

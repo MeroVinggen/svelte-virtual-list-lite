@@ -120,12 +120,6 @@ pre {
   overflow: hidden;
 }
 
-.viewport.resizable {
-  resize: horizontal;
-  min-width: 200px;
-  max-width: 100%;
-}
-
 .file {
   font-size: 20px;
 }
@@ -162,6 +156,16 @@ pre {
 }
 
 .viewport.grid {
+  position: relative;
+  resize: horizontal;
+  min-width: 200px;
+  max-width: 100%;
+
+  &::-webkit-resizer {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+
   .tile {
     transition: transform 150ms ease, box-shadow 150ms ease;
   }
